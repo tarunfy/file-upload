@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen min-w-full">
+      <div className="min-h-screen min-w-full flex items-center justify-center">
         <p>Loading...</p>
       </div>
     );

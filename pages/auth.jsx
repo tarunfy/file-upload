@@ -1,9 +1,17 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useRouter } from "next/router";
 
 const auth = () => {
   const { googleAuthentication, user } = useContext(AuthContext);
-  console.log(user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-slate-100 min-w-full flex justify-center items-center">
       <button
