@@ -1,10 +1,18 @@
+import { useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/auth");
+    }
+  }, [user]);
+
   return (
     <>
       <Head>
