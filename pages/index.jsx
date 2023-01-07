@@ -1,13 +1,68 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Upload from "../components/Upload";
+import { storage } from "../config/firebase";
+import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import List from "../components/List";
 
 export default function Home() {
+  const [fileList, setFileList] = useState([]);
   const router = useRouter();
   const { user, logout } = useContext(AuthContext);
 
+  //upload file handler:
+  const handleUpload = async (file) => {
+    if (!file) return;
+
+    //creating a reference to the file location:
+    const fileRef = ref(storage, `${user.uid}/${file.name}`);
+
+    try {
+      //upload the actual file:
+      const res = await uploadBytes(fileRef, file);
+      const url = await getDownloadURL(res.ref);
+      setFileList((prev) => [
+        ...prev,
+        {
+          name: res.ref.name,
+          url,
+        },
+      ]);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  //fetch all files:
+  useEffect(() => {
+    const getFiles = async () => {
+      try {
+        const filesRef = ref(storage, `${user.uid}`);
+        const res = await listAll(filesRef);
+        console.log(res.items.length);
+        res.items.forEach(async (i) => {
+          const url = await getDownloadURL(i);
+          setFileList([
+            ...fileList,
+            {
+              name: i.name,
+              url,
+            },
+          ]);
+        });
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    if (user) {
+      getFiles();
+    }
+  }, [user]);
+
+  //check for autherization:
   useEffect(() => {
     if (!user) {
       router.push("/auth");
@@ -28,7 +83,8 @@ export default function Home() {
       >
         Logout
       </button>
-      <Upload />
+      <Upload handleUpload={handleUpload} />
+      <List files={fileList} />
     </div>
   );
 }

@@ -1,12 +1,22 @@
-import React from "react";
+import { useState } from "react";
 
-const Upload = () => {
+const Upload = ({ handleUpload }) => {
+  const [file, setFile] = useState(null);
+
   return (
-    <div className="px-14 py-6 flex justify-center items-center">
+    <div className="px-14 py-6 flex justify-center items-center space-x-2">
       <input
+        onChange={(e) => setFile(e.target.files[0])}
         type="file"
-        className="text-2xl text-white rounded hover:shadow-md transition bg-violet-600 border-white shadow px-6 py-2"
+        className="text-xl text-white rounded hover:shadow-md transition bg-violet-600 border-white shadow px-6 py-2"
       />
+      <button
+        disabled={!file}
+        onClick={() => handleUpload(file)}
+        className="text-2xl disabled:cursor-not-allowed disabled:opacity-70 text-white rounded hover:shadow-md transition bg-sky-500 border-white shadow px-6 py-2"
+      >
+        Upload
+      </button>
     </div>
   );
 };

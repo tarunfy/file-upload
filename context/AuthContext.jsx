@@ -4,8 +4,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "@firebase/auth";
-import { auth, db } from "../config/firebase";
-import { doc, getDoc, setDoc } from "@firebase/firestore";
+import { auth } from "../config/firebase";
 
 export const AuthContext = createContext(null);
 
@@ -18,16 +17,6 @@ export const AuthProvider = ({ children }) => {
     onAuthStateChanged(auth, async (user) => {
       setIsLoading(true);
       if (user) {
-        const ref = doc(db, "users", user.uid);
-        const docSnap = await getDoc(ref);
-        if (!docSnap.exists()) {
-          await setDoc(ref, {
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            uid: user.uid,
-          });
-        }
         setUser({
           email: user.email,
           displayName: user.displayName,
