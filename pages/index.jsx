@@ -9,6 +9,7 @@ import List from "../components/List";
 
 export default function Home() {
   const [fileList, setFileList] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   const router = useRouter();
   const { user, logout } = useContext(AuthContext);
 
@@ -19,6 +20,7 @@ export default function Home() {
     //creating a reference to the file location:
     const fileRef = ref(storage, `${user.uid}/${file.name}`);
 
+    setIsFetching(true);
     try {
       //upload the actual file:
       const res = await uploadBytes(fileRef, file);
@@ -33,11 +35,13 @@ export default function Home() {
     } catch (err) {
       console.log(err.message);
     }
+    setIsFetching(false);
   };
 
   //fetch all files:
   useEffect(() => {
     const getFiles = async () => {
+      setIsFetching(true);
       try {
         const filesRef = ref(storage, `${user.uid}`);
         const res = await listAll(filesRef);
@@ -54,6 +58,7 @@ export default function Home() {
       } catch (err) {
         console.log(err.message);
       }
+      setIsFetching(false);
     };
 
     if (user) {
@@ -78,7 +83,12 @@ export default function Home() {
         Logout
       </button>
       <Upload handleUpload={handleUpload} />
-      <List files={fileList} />
+
+      {isFetching ? (
+        <p className="text-center">Loading..</p>
+      ) : (
+        <List files={fileList} />
+      )}
     </div>
   );
 }
