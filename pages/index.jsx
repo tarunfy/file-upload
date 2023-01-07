@@ -4,14 +4,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Upload from "../components/Upload";
 import { storage } from "../config/firebase";
-import {
-  ref,
-  uploadBytes,
-  listAll,
-  getDownloadURL,
-  getBytes,
-} from "firebase/storage";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
 import List from "../components/List";
+import { uploadFile } from "../utils/firebase";
 
 export default function Home() {
   const [fileList, setFileList] = useState([]);
@@ -28,20 +23,9 @@ export default function Home() {
     //creating a reference to the file location:
     const fileRef = ref(storage, `${user.uid}/${file.name}`);
 
-    try {
-      //upload the actual file:
-      const res = await uploadBytes(fileRef, file);
-      const url = await getDownloadURL(res.ref);
-      setFileList((prev) => [
-        ...prev,
-        {
-          name: res.ref.name,
-          url,
-        },
-      ]);
-    } catch (err) {
-      console.log(err.message);
-    }
+    //upload the actual file:
+    const res = await uploadFile(file, fileRef);
+    setFileList((prev) => [...prev, res]);
 
     setIsUploading(false);
   };
