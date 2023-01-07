@@ -1,7 +1,7 @@
 const FileCard = ({ file }) => {
   return (
     <div className="p-4 border-b border-[2px] min-w-full">
-      <a className="text-2xl bg-slate-200" href={file.url} download={file.name}>
+      <a className="text-2xl" href={file.url} download={file.name}>
         {file.name}
       </a>
     </div>

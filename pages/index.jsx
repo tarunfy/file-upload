@@ -4,7 +4,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Upload from "../components/Upload";
 import { storage } from "../config/firebase";
-import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  listAll,
+  getDownloadURL,
+  getBytes,
+} from "firebase/storage";
 import List from "../components/List";
 
 export default function Home() {
