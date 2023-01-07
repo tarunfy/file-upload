@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Upload = ({ handleUpload }) => {
+const Upload = ({ handleUpload, isUploading }) => {
   const [file, setFile] = useState(null);
 
   return (
@@ -11,7 +11,7 @@ const Upload = ({ handleUpload }) => {
         className="text-xl text-white rounded hover:shadow-md transition bg-violet-600 border-white shadow px-6 py-2"
       />
       <button
-        disabled={!file}
+        disabled={!file || isUploading}
         onClick={() => handleUpload(file)}
         className="text-2xl disabled:cursor-not-allowed disabled:opacity-70 text-white rounded hover:shadow-md transition bg-sky-500 border-white shadow px-6 py-2"
       >
