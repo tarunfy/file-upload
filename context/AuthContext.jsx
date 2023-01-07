@@ -14,8 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      setIsLoading(true);
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser({
           email: user.email,
@@ -26,7 +25,6 @@ export const AuthProvider = ({ children }) => {
       } else {
         setUser(null);
       }
-      setIsLoading(false);
     });
   }, []);
 

@@ -41,11 +41,10 @@ export default function Home() {
       try {
         const filesRef = ref(storage, `${user.uid}`);
         const res = await listAll(filesRef);
-        console.log(res.items.length);
         res.items.forEach(async (i) => {
           const url = await getDownloadURL(i);
-          setFileList([
-            ...fileList,
+          setFileList((prev) => [
+            ...prev,
             {
               name: i.name,
               url,
@@ -59,15 +58,10 @@ export default function Home() {
 
     if (user) {
       getFiles();
-    }
-  }, [user]);
-
-  //check for autherization:
-  useEffect(() => {
-    if (!user) {
+    } else {
       router.push("/auth");
     }
-  }, [user]);
+  }, []);
 
   return (
     <div className="min-h-screen min-w-full relative">
