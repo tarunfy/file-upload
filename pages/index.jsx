@@ -8,7 +8,7 @@ import { ref, listAll, getDownloadURL } from "firebase/storage";
 import List from "../components/List";
 import { uploadFile } from "../utils/firebase";
 
-export default function Home() {
+const Home = () => {
   const [fileList, setFileList] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -83,4 +83,6 @@ export default function Home() {
       )}
     </div>
   );
-}
+};
+
+export default Home;

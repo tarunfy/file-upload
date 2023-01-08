@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
-const auth = () => {
+const Auth = () => {
   const { googleAuthentication, user } = useContext(AuthContext);
   const router = useRouter();
 
@@ -24,4 +24,4 @@ const auth = () => {
   );
 };
 
-export default auth;
+export default Auth;
