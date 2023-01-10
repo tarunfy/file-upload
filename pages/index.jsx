@@ -1,32 +1,34 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useRef, lazy } from "react";
 import { AuthContext } from "../context/AuthContext";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Upload from "../components/Upload";
 import { storage } from "../config/firebase";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import List from "../components/List";
 import { uploadFile } from "../utils/firebase";
+import UploadInput from "../components/UploadInput";
 
 const Home = () => {
   const [fileList, setFileList] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  const inputRef = useRef(null);
+
   const router = useRouter();
   const { user, logout } = useContext(AuthContext);
 
   //upload file handler:
-  const handleUpload = async (file) => {
-    if (!file) return;
+  const handleUpload = async (f) => {
+    if (!f) return;
     setIsUploading(true);
 
     //creating a reference to the file location:
-    const fileRef = ref(storage, `${user.uid}/${file.name}`);
+    const fileRef = ref(storage, `${user.uid}/${f.name}`);
 
     //upload the actual file:
-    const res = await uploadFile(file, fileRef);
+    const res = await uploadFile(f, fileRef);
     setFileList((prev) => [...prev, res]);
-
     setIsUploading(false);
   };
 
@@ -74,7 +76,11 @@ const Home = () => {
       >
         Logout
       </button>
-      <Upload isUploading={isUploading} handleUpload={handleUpload} />
+      <UploadInput
+        inputRef={inputRef}
+        isUploading={isUploading}
+        handleUpload={handleUpload}
+      />
 
       {isFetching ? (
         <p className="text-center">Loading..</p>
